@@ -109,67 +109,12 @@ public class ConnectedTripShould {
     }
 
 
-//    @Test
-//    public void taxi_should_stay_if_in_grid_with_another_taxi () throws Exception{
-//
-//        //arrange
-//
-//        //act
-//        taxiC.move("DRUDLRU");
-//
-//        //assert
-//        assertEquals("2,2",taxiC.gridref());
-//    }
-
-//    @Test
-//    public void move_only_taxiA() {
-//        taxiA = new Taxi("A","0,0");
-//        taxiB = new Taxi("B","0,0");
-//        taxiC = new Taxi("C","0,0");
-//
-//        taxis = new HashMap<>();
-//        taxis.put("A", taxiA);
-//        taxis.put("B", taxiB);
-//        taxis.put("C", taxiC);
-//
-//        connectedTrip = new ConnectedTrip(taxis);
-//
-//        taxiA.move("R",taxis);
-//        taxiB.move("R",taxis);
-//        taxiC.move("R",taxis);
-//
-//        assertEquals("1,0",taxiA.gridref());
-//        assertEquals("0,0",taxiB.gridref());
-//        assertEquals("0,0",taxiC.gridref());
-//    }
-
-
-//    @Test
-//    public void tick () throws Exception{
-//
-//        taxiA = new Taxi("A","0,0");
-//        taxiB = new Taxi("B","0,0");
-//        taxiC = new Taxi("C","0,0");
-//
-//        taxiList.add(taxiA);
-//        taxiList.add(taxiB);
-//        taxiList.add(taxiC);
-//
-//        Dispatch dispatch = new Dispatch(taxiList);
-//
-//        dispatch.move("R");
-//
-//
-//        assertEquals("1,0",taxiA.gridref());
-//        assertEquals("0,0",taxiB.gridref());
-//        assertEquals("0,0",taxiC.gridref());
-//    }
     
     @Mock
     Taxis allTheTaxis;
 
     @Test
-    public void dispatcher_should_move_all_taxis () throws Exception{
+    public void dispatcher_should_be_able_to_move_all_taxis () throws Exception{
         //given
         Dispatcher dispatcher = new Dispatcher(allTheTaxis);
         //when
@@ -190,7 +135,7 @@ public class ConnectedTripShould {
 
 
     @Test
-    public void dispatcher_should_only_move_one_taxi () throws Exception{
+    public void dispatcher_should_only_move_taxi_a () throws Exception{
         //arrange
 
         taxiList.clear();
@@ -212,13 +157,13 @@ public class ConnectedTripShould {
         //assert
         assertNotEquals("0,0", taxiA.gridref());
         assertEquals("0,0", taxiB.gridref());
-        //assertEquals("0,0", taxiC.gridref());
+        assertEquals("0,0", taxiC.gridref());
 
 
     }
 
     @Test
-    public void dispatcher_should_only_move_one_taxi_b () throws Exception{
+    public void dispatcher_should_only_move_taxi_a_and_b_when_b_is_in_same_grid_as_c () throws Exception{
         //arrange
 
         taxiList.clear();
@@ -246,7 +191,7 @@ public class ConnectedTripShould {
     }
 
     @Test
-    public void dispatcher_should_move_all_the_taxis () throws Exception{
+    public void dispatcher_should_move_all_the_taxis_when_they_are_in_different_grids () throws Exception{
         //arrange
 
         taxiList.clear();
@@ -273,14 +218,14 @@ public class ConnectedTripShould {
     }
 
     @Test
-    public void dispatcher_should_move_two_taxis_not_A () throws Exception{
+    public void dispatcher_should_move_a_and_b_not_c () throws Exception{
         //arrange
 
         taxiList.clear();
 
         taxiA = new Taxi("A","1,0");
         taxiB = new Taxi("B","0,1");
-        taxiC = new Taxi("C","2,0");
+        taxiC = new Taxi("C","1,0");
 
         taxiList.add(taxiA);
         taxiList.add(taxiB);
@@ -294,7 +239,34 @@ public class ConnectedTripShould {
         //assert
         assertEquals("2,0", taxiA.gridref());
         assertEquals("1,1", taxiB.gridref());
-        assertEquals("3,0", taxiC.gridref());
+        assertEquals("1,0", taxiC.gridref());
+
+
+    }
+
+    @Test
+    public void dispatcher_should_move_a_and_c_not_b () throws Exception{
+        //arrange
+
+        taxiList.clear();
+
+        taxiA = new Taxi("A","1,0");
+        taxiB = new Taxi("B","1,0");
+        taxiC = new Taxi("C","1,1");
+
+        taxiList.add(taxiA);
+        taxiList.add(taxiB);
+        taxiList.add(taxiC);
+
+        Dispatcher dispatcher = new Dispatcher(new Taxis(taxiList));
+
+        //act
+        dispatcher.dispatch("R");
+
+        //assert
+        assertEquals("2,0", taxiA.gridref());
+        assertEquals("1,0", taxiB.gridref());
+        assertEquals("2,1", taxiC.gridref());
 
 
     }
