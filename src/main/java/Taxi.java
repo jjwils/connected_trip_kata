@@ -49,7 +49,11 @@ public class Taxi {
         }
     }
 
-    public void actuallyMove(String move) {
+    public void actuallyMove(String command) {
+            move(command);
+    }
+
+    private void move(String move) {
         move.chars().forEach(movement->{
             cellometer++;
             if (movement == 'U') {

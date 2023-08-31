@@ -10,9 +10,6 @@ public class Dispatch {
 
     public void move(String command) {
 
-
-        taxis.stream().filter(taxi -> taxi.gridref().equals());
-
        taxis.forEach(taxi -> taxi.actuallyMove(command));
     }
 }
