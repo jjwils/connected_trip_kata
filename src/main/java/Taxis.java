@@ -87,4 +87,8 @@ public class Taxis {
     public List<Taxi> taxis() {
         return taxis;
     }
+
+    public String[] locations() {
+        return taxis.stream().map(taxi-> taxi.gridref()).toArray(String[]::new);
+    }
 }
