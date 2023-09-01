@@ -11,6 +11,14 @@ public class Taxi {
 
     private int ygrid;
 
+    public int getXgrid() {
+        return xgrid;
+    }
+
+    public int getYgrid() {
+        return ygrid;
+    }
+
     private int cellometer;
 
 

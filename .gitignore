@@ -1,4 +1,7 @@
 ### Java template
+
+# Approval Tests recieved files
+*.received.*
 # Compiled class file
 *.class
 
