@@ -1,25 +1,25 @@
+import domain.Taxi;
+import domain.Taxis;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 public class ConnectedTripShould {
 
-    private ConnectedTrip connectedTrip;
+    private Taxis taxis;
     private Taxi taxiA;
     private Taxi taxiB;
     private Taxi taxiC;
 
-    private HashMap<String, Taxi> taxis;
+    private HashMap<String, Taxi> taxiMap;
 
     private List<Taxi> taxiList = new ArrayList<>();
 
@@ -29,12 +29,17 @@ public class ConnectedTripShould {
         taxiB = new Taxi("B","2,2");
         taxiC = new Taxi("C","1,1");
 
-        taxis = new HashMap<>();
-        taxis.put("A", taxiA);
-        taxis.put("B", taxiB);
-        taxis.put("C", taxiC);
+        taxiA.canMoveOnNextStep(true);
+        taxiB.canMoveOnNextStep(true);
+        taxiC.canMoveOnNextStep(true);
 
-        connectedTrip = new ConnectedTrip(taxis);
+
+        taxiMap = new HashMap<>();
+        taxiMap.put("A", taxiA);
+        taxiMap.put("B", taxiB);
+        taxiMap.put("C", taxiC);
+
+        taxis = new Taxis(taxiMap);
 
         taxiList.add(taxiA);
         taxiList.add(taxiB);
@@ -59,15 +64,15 @@ public class ConnectedTripShould {
     public void taxis_at_correct_start_location() {
 
         //assert
-        assertEquals("5,3", connectedTrip.taxiLocation("A"));
-        assertEquals("2,2", connectedTrip.taxiLocation("B"));
-        assertEquals("1,1", connectedTrip.taxiLocation("C"));
+        assertEquals("5,3", taxis.taxiLocation("A"));
+        assertEquals("2,2", taxis.taxiLocation("B"));
+        assertEquals("1,1", taxis.taxiLocation("C"));
 
     }
 
     @Test
     public void taxi_should_move_up_one_cell () throws Exception{
-        taxiA.move("U", taxis);
+        taxiA.move("U", taxiMap);
         assertEquals("5,2",taxiA.gridref());
         assertEquals(1,taxiA.cellometer());
 
@@ -75,7 +80,7 @@ public class ConnectedTripShould {
 
     @Test
     public void taxi_should_move_down_one_cell () throws Exception{
-        taxiA.move("D", taxis);
+        taxiA.move("D");
         assertEquals("5,4",taxiA.gridref());
         assertEquals(1,taxiA.cellometer());
 
@@ -83,7 +88,7 @@ public class ConnectedTripShould {
 
     @Test
     public void taxi_should_left_up_one_cell () throws Exception{
-        taxiA.move("L", taxis);
+        taxiA.move("L", taxiMap);
         assertEquals("4,3",taxiA.gridref());
         assertEquals(1,taxiA.cellometer());
 
@@ -91,7 +96,7 @@ public class ConnectedTripShould {
 
     @Test
     public void taxi_should_move_right_one_cell () throws Exception{
-        taxiA.move("R", taxis);
+        taxiA.move("R", taxiMap);
         assertEquals("6,3",taxiA.gridref());
         assertEquals(1,taxiA.cellometer());
 
@@ -103,25 +108,11 @@ public class ConnectedTripShould {
     public void taxi_multiple_moves () throws Exception{
 
 
-        taxiA.move("LL", taxis);
+        taxiA.move("LL", taxiMap);
 
         assertEquals("3,3",taxiA.gridref());
     }
 
-
-    
-    @Mock
-    Taxis allTheTaxis;
-
-    @Test
-    public void dispatcher_should_be_able_to_move_all_taxis () throws Exception{
-        //given
-        Dispatcher dispatcher = new Dispatcher(allTheTaxis);
-        //when
-        dispatcher.dispatch("R");
-        //then
-        verify(allTheTaxis).move("R");
-    }
 
 
     @Test
@@ -134,142 +125,6 @@ public class ConnectedTripShould {
     }
 
 
-    @Test
-    public void dispatcher_should_only_move_taxi_a () throws Exception{
-        //arrange
-
-        taxiList.clear();
-
-
-        taxiA = new Taxi("A","0,0");
-        taxiB = new Taxi("B","0,0");
-        taxiC = new Taxi("C","0,0");
-
-        taxiList.add(taxiA);
-        taxiList.add(taxiB);
-        taxiList.add(taxiC);
-
-        Dispatcher dispatcher = new Dispatcher(new Taxis(taxiList));
-
-        //act
-        dispatcher.dispatch("R");
-
-        //assert
-        assertNotEquals("0,0", taxiA.gridref());
-        assertEquals("0,0", taxiB.gridref());
-        assertEquals("0,0", taxiC.gridref());
-
-
-    }
-
-    @Test
-    public void dispatcher_should_only_move_taxi_a_and_b_when_b_is_in_same_grid_as_c () throws Exception{
-        //arrange
-
-        taxiList.clear();
-
-
-        taxiA = new Taxi("A","1,0");
-        taxiB = new Taxi("B","0,0");
-        taxiC = new Taxi("C","0,0");
-
-        taxiList.add(taxiA);
-        taxiList.add(taxiB);
-        taxiList.add(taxiC);
-
-        Dispatcher dispatcher = new Dispatcher(new Taxis(taxiList));
-
-        //act
-        dispatcher.dispatch("R");
-
-        //assert
-        assertEquals("2,0", taxiA.gridref());
-        assertEquals("1,0", taxiB.gridref());
-        assertEquals("0,0", taxiC.gridref());
-
-
-    }
-
-    @Test
-    public void dispatcher_should_move_all_the_taxis_when_they_are_in_different_grids () throws Exception{
-        //arrange
-
-        taxiList.clear();
-
-        taxiA = new Taxi("A","1,0");
-        taxiB = new Taxi("B","0,1");
-        taxiC = new Taxi("C","2,0");
-
-        taxiList.add(taxiA);
-        taxiList.add(taxiB);
-        taxiList.add(taxiC);
-
-        Dispatcher dispatcher = new Dispatcher(new Taxis(taxiList));
-
-        //act
-        dispatcher.dispatch("R");
-
-        //assert
-        assertEquals("2,0", taxiA.gridref());
-        assertEquals("1,1", taxiB.gridref());
-        assertEquals("3,0", taxiC.gridref());
-
-
-    }
-
-    @Test
-    public void dispatcher_should_move_a_and_b_not_c () throws Exception{
-        //arrange
-
-        taxiList.clear();
-
-        taxiA = new Taxi("A","1,0");
-        taxiB = new Taxi("B","0,1");
-        taxiC = new Taxi("C","1,0");
-
-        taxiList.add(taxiA);
-        taxiList.add(taxiB);
-        taxiList.add(taxiC);
-
-        Dispatcher dispatcher = new Dispatcher(new Taxis(taxiList));
-
-        //act
-        dispatcher.dispatch("R");
-
-        //assert
-        assertEquals("2,0", taxiA.gridref());
-        assertEquals("1,1", taxiB.gridref());
-        assertEquals("1,0", taxiC.gridref());
-
-
-    }
-
-    @Test
-    public void dispatcher_should_move_a_and_c_not_b () throws Exception{
-        //arrange
-
-        taxiList.clear();
-
-        taxiA = new Taxi("A","1,0");
-        taxiB = new Taxi("B","1,0");
-        taxiC = new Taxi("C","1,1");
-
-        taxiList.add(taxiA);
-        taxiList.add(taxiB);
-        taxiList.add(taxiC);
-
-        Dispatcher dispatcher = new Dispatcher(new Taxis(taxiList));
-
-        //act
-        dispatcher.dispatch("R");
-
-        //assert
-        assertEquals("2,0", taxiA.gridref());
-        assertEquals("1,0", taxiB.gridref());
-        assertEquals("2,1", taxiC.gridref());
-
-
-    }
 
 
 

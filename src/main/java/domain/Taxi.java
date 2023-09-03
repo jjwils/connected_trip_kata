@@ -1,3 +1,5 @@
+package domain;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -10,6 +12,7 @@ public class Taxi {
     private int xgrid;
 
     private int ygrid;
+    private boolean canMoveOnNextStep = false;
 
     public int getXgrid() {
         return xgrid;
@@ -61,19 +64,22 @@ public class Taxi {
             move(command);
     }
 
-    private void move(String move) {
-        move.chars().forEach(movement->{
-            cellometer++;
-            if (movement == 'U') {
-                ygrid--;
-            } else if(movement == 'D') {
-                ygrid++;
-            } else if(movement == 'L') {
-                xgrid--;
-            } else if(movement == 'R') {
-                xgrid++;
-            }
-        });
+    public void move(String move) {
+
+        if (canMoveOnNextStep) {
+            move.chars().forEach(movement -> {
+                cellometer++;
+                if (movement == 'U') {
+                    ygrid--;
+                } else if (movement == 'D') {
+                    ygrid++;
+                } else if (movement == 'L') {
+                    xgrid--;
+                } else if (movement == 'R') {
+                    xgrid++;
+                }
+            });
+        }
     }
 
     public int cellometer() {
@@ -91,5 +97,13 @@ public class Taxi {
     @Override
     public int hashCode() {
         return Objects.hash(taxi);
+    }
+
+    public boolean canMoveOnNextStep() {
+        return canMoveOnNextStep;
+    }
+
+    public void canMoveOnNextStep(boolean b) {
+        canMoveOnNextStep = b;
     }
 }
