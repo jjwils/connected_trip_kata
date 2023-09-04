@@ -1,3 +1,5 @@
+package uk.me.johnwilson;
+
 import uk.me.johnwilson.Taxi;
 
 import java.util.List;

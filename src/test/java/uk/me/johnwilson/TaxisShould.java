@@ -1,3 +1,5 @@
+package uk.me.johnwilson;
+
 import uk.me.johnwilson.Dispatcher;
 import uk.me.johnwilson.Taxi;
 import uk.me.johnwilson.TaxiCommand;

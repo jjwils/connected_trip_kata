@@ -1,3 +1,5 @@
+package uk.me.johnwilson;
+
 import uk.me.johnwilson.Taxi;
 import uk.me.johnwilson.Taxis;
 import org.junit.jupiter.api.BeforeEach;
