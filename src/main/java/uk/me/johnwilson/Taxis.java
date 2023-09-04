@@ -1,6 +1,5 @@
-package domain;
+package uk.me.johnwilson;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 

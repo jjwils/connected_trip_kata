@@ -1,7 +1,7 @@
-import domain.Dispatcher;
-import domain.Taxi;
-import domain.TaxiCommand;
-import domain.Taxis;
+import uk.me.johnwilson.Dispatcher;
+import uk.me.johnwilson.Taxi;
+import uk.me.johnwilson.TaxiCommand;
+import uk.me.johnwilson.Taxis;
 import org.approvaltests.Approvals;
 import org.approvaltests.reporters.Junit5Reporter;
 import org.approvaltests.reporters.UseReporter;
@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @UseReporter(Junit5Reporter.class)
 public class TaxisShould {
@@ -208,6 +210,7 @@ public class TaxisShould {
 
 
         //act
+        //dispatcher.assessNextSteps(listOfTaxis);
         dispatcher.dispatch(taxiCommands);
 
         //assert
@@ -240,16 +243,56 @@ public class TaxisShould {
         List<TaxiCommand> taxiCommands = new ArrayList<>();
         taxiCommands.add(new TaxiCommand(taxiA, "LLUURRD"));
         taxiCommands.add( new TaxiCommand(taxiB, "URRRD"));
-        taxiCommands.add(new TaxiCommand(taxiC, "RRRRD"));
-
+        taxiCommands.add(new TaxiCommand(taxiC, "RRRRRD"));
 
         //act
         dispatcher.dispatch(taxiCommands);
 
+        //assert
+        Approvals.verify(TaxiPrinter.plotTaxis(listOfTaxis));
 
+        System.out.println("TaxiA distance travelled: " + taxiA.cellometer());
+        System.out.println("TaxiB distance travelled: " + taxiB.cellometer());
+        System.out.println("TaxiC distance travelled: " + taxiC.cellometer());
+
+    }
+
+    @Test
+    void all_pick_up_and_drop_off(){
+        //arrange
+
+        Taxi taxiA = new Taxi("A","5,3");
+        Taxi taxiB = new Taxi("B","2,2");
+        Taxi taxiC = new Taxi("C","1,1");
+
+        List<Taxi> listOfTaxis = new ArrayList<>();
+        listOfTaxis.add(taxiA);
+        listOfTaxis.add(taxiB);
+        listOfTaxis.add(taxiC);
+
+        Taxis taxis = new Taxis(listOfTaxis);
+        Dispatcher dispatcher = new Dispatcher(taxis);
+
+
+        List<TaxiCommand> taxiCommands = new ArrayList<>();
+        taxiCommands.add(new TaxiCommand(taxiA, "LLUURRDULLLLD"));
+        taxiCommands.add( new TaxiCommand(taxiB, "URRRDUULLLLD"));
+        taxiCommands.add(new TaxiCommand(taxiC, "RRRRRDUUULLLLD"));
+
+        //act
+        dispatcher.dispatch(taxiCommands);
 
         //assert
         Approvals.verify(TaxiPrinter.plotTaxis(listOfTaxis));
+
+        System.out.println("TaxiA Number of move commands issued: " + taxiCommands.get(0).command().length());
+        System.out.println("TaxiB Number of move commands issued: " + taxiCommands.get(1).command().length());
+        System.out.println("TaxiC Number of move commands issued: " + taxiCommands.get(2).command().length());
+
+        System.out.println("TaxiA distance travelled: " + taxiA.cellometer());
+        System.out.println("TaxiB distance travelled: " + taxiB.cellometer());
+        System.out.println("TaxiC distance travelled: " + taxiC.cellometer());
+
     }
 
 

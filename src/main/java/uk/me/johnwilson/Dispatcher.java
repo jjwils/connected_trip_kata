@@ -1,4 +1,4 @@
-package domain;
+package uk.me.johnwilson;
 
 import java.util.ArrayList;
 import java.util.Comparator;

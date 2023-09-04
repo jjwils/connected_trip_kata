@@ -1,4 +1,4 @@
-import domain.Taxi;
+import uk.me.johnwilson.Taxi;
 
 import java.util.List;
 

@@ -1,7 +1,5 @@
-import domain.Dispatcher;
-import domain.Taxi;
-import domain.TaxiCommand;
-import domain.Taxis;
+package uk.me.johnwilson;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
